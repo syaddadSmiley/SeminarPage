@@ -262,12 +262,6 @@ function AdminPage() {
           >
             Input Data
           </button>
-          <button
-            className={toggleState === 3 ? "tabs active-tabs" : "tabs"}
-            onClick={() => toggleTab(3)}
-          >
-            Input Products
-          </button>
         </div>
 
         <div className="content-tabs">
@@ -353,80 +347,6 @@ function AdminPage() {
                   className="form-control"
                   name="jenis"
                   id="jenis"
-                  onChange={(e) => handle(e)}
-                ></input>
-              </div>
-
-              <button type="submit" className="btn btn-primary">
-                Submit
-              </button>
-            </form>
-          </div>
-
-          <div
-            className={
-              toggleState === 3 ? "content  active-content" : "content"
-            }
-          >
-            <form onSubmit={submit}>
-              <div className="mb-3">
-                <label className="form-label">Category</label>
-                <select className="form-control" type="text"
-                  value={data.jenis}
-                  name="jenis"
-                  id="jenis"
-                  onChange={(e) => handle(e)}>
-                  <option>1</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
-                </select>
-                {/* <input
-                  type="text"
-                  value={data.jenis}
-                  className="form-control"
-                  name="jenis"
-                  id="jenis"
-                  onChange={(e) => handle(e)}
-                ></input> */}
-              </div>
-
-              <div className="mb-3">
-                <label className="form-label">Tanggal Terbit</label>
-                <input
-                  type="date"
-                  value={data.Tanggal}
-                  className="form-control"
-                  name="Tanggal"
-                  id="Tanggal"
-                  onChange={(e) => handle(e)}
-                ></input>
-              </div>
-
-              <div className="mb-3">
-                <label className="form-label">Penulis</label>
-                <input
-                  type="number"
-                  min="1"
-                  max="5"
-                  value={data.Id_Penulis}
-                  className="form-control"
-                  name="Id_Penulis"
-                  id="Id_Penulis"
-                  placeholder="1-5"
-                  onChange={(e) => handle(e)}
-                ></input>
-              </div>
-
-              <div className="mb-3">
-                <label className="form-label">Deskripsi</label>
-                <input
-                  type="text"
-                  value={data.Deskripsi}
-                  className="form-control"
-                  name="Deskripsi"
-                  id="Deskripsi"
                   onChange={(e) => handle(e)}
                 ></input>
               </div>

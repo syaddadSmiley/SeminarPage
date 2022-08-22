@@ -6,7 +6,7 @@ export default function Teachers({ judul, jenisProduct, deskripsi, lokasi, harga
 
     return (
 
-        <div class="card">
+        <div class="card ">
             <div class="card__image-holder">
                 <img class="card__image" src={image} alt="desert" style={{maxWidth:'260px', maxHeight:'260px'}}/>
             </div>
@@ -16,11 +16,11 @@ export default function Teachers({ judul, jenisProduct, deskripsi, lokasi, harga
                     <span class="right"></span>
                 </a>
                 <h2>
-                    {judul}
+                    {judul.length > 20 ? <p style={{fontSize: '21px', marginBottom: '0px'}}>{judul}</p> : judul}
                     <small>{jenisProduct}</small>
                 </h2>
             </div>
-            <div class="card-flap flap1">
+            {/* <div class="card-flap flap1 show">
                 <div class="card-description">
                     {deskripsi}
                 </div>
@@ -29,7 +29,7 @@ export default function Teachers({ judul, jenisProduct, deskripsi, lokasi, harga
                         <a href="#" class="btn">Read more</a>
                     </div>
                 </div>
-            </div>
+            </div> */}
         </div>
     )
 }

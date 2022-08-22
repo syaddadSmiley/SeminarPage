@@ -112,7 +112,7 @@ const StudentProfile = () => {
                 <div className="col-md-6 mx-auto my-5">
                     <h3 className="mt-5 mb-3">My Profile</h3>
                     <div className="card" aria-label="Post Card" style={{}}>
-                        <img src={detail?.gambar} className="card-image-top" style={{ maxHeight: '300px', maxWidth: '200px' }} />
+                        <img src={detail?.gambar} className="card-image-top" style={{ maxHeight: '300px', maxWidth: '200px', marginRight: 'auto', marginLeft: 'auto', display: 'block' }} />
                     </div>
                     {/* <img src={detail?.profile_pict} /> */}
                     <CInputImage value={detail?.profile_pict} onFileChange={(value) => setBase64Image(value)} isShowUploadButton={isEditMode} resetDefaultState={!isEditMode} />
