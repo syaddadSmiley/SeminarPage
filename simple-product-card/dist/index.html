@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - Simple Product Card</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+<link rel="stylesheet" href="./style.css">
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<div class="wrapper">
+  <div class="product-single">
+    <div class="product-gallery">
+      <div class="slider-arrows"><i class="fa fa-fw fa-arrow-circle-o-left" id="prev-slide"></i><i class="fa fa-fw fa-arrow-circle-o-right" id="next-slide"></i></div>
+      <div id="slider-wrap">
+        <ul class="slides">
+          <li><img src="https://storage.googleapis.com/chydlx/codepen/simple-product-card/yoshi-yarn-1.jpg" alt=""/></li>
+          <li><img src="https://storage.googleapis.com/chydlx/codepen/simple-product-card/yoshi-yarn-2.jpg" alt=""/></li>
+        </ul>
+        <ul class="nav-dots">
+          <li class="active"></li>
+          <li></li>
+        </ul>
+      </div>
+    </div>
+    <div class="product-details">
+      <h1 class="product-title">Green Mega Yarn Yoshi</h1>
+      <h3 class="product-cost">$39.99</h3>
+      <div class="product-rating">
+        <ul>
+          <li class="fa fa-fw fa-lg fa-star"></li>
+          <li class="fa fa-fw fa-lg fa-star"></li>
+          <li class="fa fa-fw fa-lg fa-star"></li>
+          <li class="fa fa-fw fa-lg fa-star"></li>
+          <li class="fa fa-fw fa-lg fa-star-half"></li>
+        </ul><span class="product-reviews"><a href="#">10 Reviews</a></span>
+      </div>
+      <div class="product-description">
+        <p>Made from actual yarn, Yoshi™ has never been more adorable! Kind-hearted, naturally protective of others, and perpetually hungry, Yoshi™ is always up for adventure...there are so many mysteries to explore and new things to find!</p>
+      </div>
+      <div class="product-cta">
+        <button class="product-atc">Add to Cart</button>
+        <button class="product-atw">Add to Wishlist</button>
+      </div>
+      <div class="product-info"><span class="product-sku">SKU #12345678</span></div>
+    </div>
+  </div>
+</div>
+<!-- partial -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script>
+<script src='https://use.fontawesome.com/3736911c42.js'></script><script  src="./script.js"></script>
+
+</body>
+</html>
