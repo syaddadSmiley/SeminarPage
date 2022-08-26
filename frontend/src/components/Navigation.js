@@ -71,13 +71,13 @@ function Navigation() {
                                 <Nav.Link onClick={logout} className="navbar-nav navHome">Logout</Nav.Link> */}
                                 <ul class="navbar-nav">
                                     <li class="nav-item">
-                                        <a class="btn btn-link navHome" href={`/wishlist/all`}><i class="bx bxs-heart icon-single"></i> <span class="badge badge-danger">{cardGuru.length}</span></a>
+                                        <a id="btnNav-home"class="btn btn-link navHome btnNav-home" href={`/wishlist/all`}><i class="bx bxs-heart icon-single"></i> <span class="badge badge-danger">{cardGuru.length}</span></a>
                                     </li>
                                     <li class="nav-item ml-md-3">
-                                        <a class="btn btn-primary navHome" href="/profile"><img src={auth.gambar} alt="profile pict" className="profile-pict" /><i class="bx mr-1"></i> Profile</a>
+                                        <a id="profileNav-home" class="btn btn-primary navHome" href="/profile"><img src={auth.gambar} alt="profile pict" className="profile-pict" /><i class="bx mr-1"></i> Profile</a>
                                     </li>
                                     <li class="nav-item ml-md-3">
-                                        <a class="btn btn-primary navHome" href="#" onClick={logout}><i class="bx bxs-log-out mr-1"></i> Logout</a>
+                                        <a id="logoutNav-home" class="btn btn-primary navHome" href="#" onClick={logout}><i class="bx bxs-log-out mr-1"></i> Logout</a>
                                     </li>
 
                                 </ul>

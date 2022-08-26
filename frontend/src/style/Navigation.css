@@ -184,6 +184,26 @@ a[data-toggle="collapse"] {
     transform: translateY(-50%);
 }
 
+.badge-danger {
+    color: #fff;
+    background-color: #dc3545;
+}
+
+#btnNav-home{
+    color : #007bff;
+    background-color: transparent;
+    margin-right: 10px;
+    padding: 5px;
+}
+#logoutNav-home{
+    background-color: #dc3545;
+    padding: 5px;
+}
+#profileNav-home{
+    background-color: #007cf8;
+    margin-right: 10px;
+    padding: 5px;
+}
 /* section {
     padding: 6rem;
     background: #e4e4e4;
