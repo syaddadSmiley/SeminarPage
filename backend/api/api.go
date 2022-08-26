@@ -42,6 +42,7 @@ func NewAPI(userRepo repository.UserRepo, adminRepo repository.AdminRepo) *API {
 	gin.POST("/Wishlist/add", api.AuthMiddleWare(api.CreateWishlist))
 	gin.DELETE("/Wishlist/hapus", api.AuthMiddleWare(api.DeleteWishlist))
 	gin.GET("/Wishlist/get", api.AuthMiddleWare(api.GetWishlist))
+	gin.GET("/Wishlist/all/:id", api.AuthMiddleWare(api.GetAllWishlist))
 
 	gin.POST("/Coupons/use", api.AuthMiddleWare(api.UseCoupon))
 

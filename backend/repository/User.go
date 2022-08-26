@@ -718,3 +718,40 @@ func (u *UserRepo) GetWishlist(id_user ID, Id_product ID) ([]Wishlist, error) {
 
 	return wishlist, nil
 }
+
+func (u *UserRepo) GetAllWishlist(id_user ID) ([]Task, error) {
+	sqlStatement := `SELECT
+		t.id,
+		p.jenis,
+		t.gambar,
+		t.judul,
+		t.deskripsi,
+		t.lokasi,
+		t.harga,
+		t.waktu,
+		t.kapasitas
+	FROM products AS t 
+	INNER JOIN JenisProducts AS p
+	ON t.id_jenis = p.id
+	WHERE t.id IN (SELECT id_product FROM wishlist_item WHERE wishlist_item.id_user = ?)`
+
+	fmt.Println(id_user)
+	rows, err := u.db.Query(sqlStatement, id_user)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	Wishlists := []Task{}
+	products := Task{}
+	for rows.Next() {
+		err = rows.Scan(&products.Id, &products.Jenis, &products.Gambar, &products.Judul, &products.Deskripsi, &products.Lokasi, &products.Harga, &products.Waktu, &products.Kapasitas)
+		if err != nil {
+			return []Task{}, err
+		}
+
+		Wishlists = append(Wishlists, products)
+	}
+	return Wishlists, nil
+}

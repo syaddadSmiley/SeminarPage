@@ -53,9 +53,9 @@ export default function UbahProfil() {
                                     <input type="text" name="edit-phone" id="edit-phone" class="text_upload phone"/>
                                 </div>
                             </div>
-                            <div className="btn-submit text-center">
+                            <div className="UbahProfil btn-submit text-center">
                                 <Link to="/kelas-saya">
-                                    <button type="submit" class="mt-2 btn btn-primary btn-lg button-submit">Simpan</button>
+                                    <button type="submit" class="mt-2 btn btn-primary btn-lg button-submit primer-btn">Simpan</button>
                                 </Link>
                             </div>
                         </div>

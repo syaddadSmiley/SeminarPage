@@ -20,6 +20,7 @@ import DashboardAdmin from './pages/KelasSaya';
 import UbahProfil from './components/UbahProfil';
 import Dashboard from './components/DashboardAdmin';
 import NavAdmin from './components/NavAdmin';
+import WishlistAll from './components/WishlistAll'
 
 function App() {
 
@@ -40,6 +41,7 @@ function App() {
           <Route path="teacher/:id" element={<TeacherDetail />} />
           <Route path="profile" element={<StudentProfile />} />
           <Route path="profile/teacher/:id" element={<TeacherProfile />} />
+          <Route path="wishlist/all" element={<WishlistAll/>} />
           <Route path="admin" element={<DashboardAdmin />} />
           <Route path="admin/categories" element={<AdminCategories />} />
           <Route path="admin/seminars" element={<AdminSeminars />} />

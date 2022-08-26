@@ -1351,6 +1351,60 @@ func (api *API) GetWishlist(c *gin.Context) {
 	})
 }
 
+func (api *API) GetAllWishlist(c *gin.Context) {
+	api.alloworigin(c)
+	idStr := c.Param("id")
+	id, err := repoz.StringToID(idStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code":  http.StatusBadRequest,
+			"error": err.Error(),
+		})
+	}
+
+	token, err := c.Request.Cookie("token")
+	if err != nil {
+		if err == http.ErrNoCookie {
+			c.Writer.WriteHeader(http.StatusUnauthorized)
+			c.JSON(http.StatusUnauthorized, gin.H{
+				"code":    http.StatusUnauthorized,
+				"message": "anda belum login",
+			})
+			return
+		}
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code":    http.StatusBadRequest,
+			"message": err.Error(),
+		})
+		return
+	}
+
+	claims, err := checkToken(token.Value)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"code":    http.StatusUnauthorized,
+			"message": err.Error(),
+		})
+		return
+	}
+
+	if claims.Id != id {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"code":    http.StatusUnauthorized,
+			"message": "Invalid ID!",
+		})
+		return
+	}
+
+	res, err := api.userRepo.GetAllWishlist(id)
+
+	c.JSON(http.StatusOK, gin.H{
+		"code":    http.StatusOK,
+		"data":    res,
+		"message": "success",
+	})
+}
+
 func (api *API) CheckBasket(c *gin.Context) {
 	api.alloworigin(c)
 	var CheckBasket repoz.Basket

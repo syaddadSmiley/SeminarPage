@@ -99,13 +99,13 @@
     margin-bottom: 15px;
 }
 
-.btn-primary, .btn-primary:hover {
+.primer-btn, .primer-btn:hover {
     background: #2447f9;
     color: #fff;
     border: 0;
 }
 
-.btn-primary {
+.primer-btn {
     font-size: 16px;
     padding: 11px 42px;
     border-radius: 100px;
@@ -122,7 +122,7 @@
     border-radius: 60px;
 }
 
-.btn-primary {
+.primer-btn {
     color: #fff;
     background-color: #2447f9;
 }
