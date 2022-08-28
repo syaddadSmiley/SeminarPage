@@ -2,7 +2,7 @@ import "../style/Footer.css"
 import { FaFacebook, FaInstagram, FaTwitter } from "react-icons/fa";
 import useStore from "../store/user";
 
-export default function TeacherSection() {
+export default function BannerSection() {
     const { name } = useStore()
     return (
         <div className="footer-dark">
@@ -32,10 +32,10 @@ export default function TeacherSection() {
                         </div>
                         <div className="col item social">
                             <a href="#"><i className="icon"><FaFacebook /></i></a>
-                            <a href="#"><i className="icon"><FaTwitter /></i></a>
-                            <a href="https://www.instagram.com/dindawr_/"><i className="icon"><FaInstagram /></i></a></div>
+                            <a href="https://twitter.com/chaeyoungallery"><i className="icon"><FaTwitter /></i></a>
+                            <a href="https://www.instagram.com/lalalalisa_m/"><i className="icon"><FaInstagram /></i></a></div>
                     </div>
-                    <p className="copyright">Kelompok 8 RGKM © 2022</p>
+                    <p className="copyright">Ananda | Syaddad © 2023</p>
                 </div>
             </footer>
         </div>

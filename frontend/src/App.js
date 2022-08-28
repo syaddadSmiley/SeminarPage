@@ -4,21 +4,17 @@ import './App.css'
 import { Routes, Route } from 'react-router-dom'
 import Login from './components/Login'
 import Register from './components/Register'
-import RegisterTeacher from './components/RegisterTeacher'
 import Home from './components/Home';
-import TeacherDetail from './components/TeacherDetail';
-import StudentProfile from './components/StudentProfile'
+import ProductDetail from './components/ProductDetail';
+import Profile from './components/Profile'
 import PrivateComponent from './components/PrivateComponent'
-import LoginTeacher from './components/LoginTeacher'
-import TeacherProfile from './components/TeacherProfile'
 import NotFound from './components/NotFound';
 import Tentang from './components/Tentang';
 // import DashboardAdmin from './components/DashboardAdmin';
 import AdminCategories from './pages/AdminCategories';
 import AdminSeminars from './pages/AdminSeminars';
-import DashboardAdmin from './pages/KelasSaya';
+import DashboardAdmin from './pages/DashboardAdmin';
 import UbahProfil from './components/UbahProfil';
-import Dashboard from './components/DashboardAdmin';
 import NavAdmin from './components/NavAdmin';
 import WishlistAll from './components/WishlistAll'
 
@@ -38,9 +34,8 @@ function App() {
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
         <Route element={<PrivateComponent />}>
-          <Route path="teacher/:id" element={<TeacherDetail />} />
-          <Route path="profile" element={<StudentProfile />} />
-          <Route path="profile/teacher/:id" element={<TeacherProfile />} />
+          <Route path="teacher/:id" element={<ProductDetail />} />
+          <Route path="profile" element={<Profile />} />
           <Route path="wishlist/all" element={<WishlistAll/>} />
           <Route path="admin" element={<DashboardAdmin />} />
           <Route path="admin/categories" element={<AdminCategories />} />

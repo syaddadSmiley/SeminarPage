@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import "boxicons";
-import "../style/KelasSaya.css";
+import "../style/DashboardAdmin.css";
 import Avatar from "../assets/images/kelas-1.jpg";
 import NavSiswa from "../components/NavAdmin";
 // import CardAdmin from "../components/admin";
 import { Link } from "react-router-dom"
 import "../style/NavAdmin.css";
 
-export default function KelasSaya() {
+export default function DashboardAdmin() {
 
   return (
     <div className="container-all-kelas-1">

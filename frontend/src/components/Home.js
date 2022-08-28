@@ -4,9 +4,9 @@ import { Link } from "react-router-dom";
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import '../style/Home.css';
 import '../App.css';
-import Teachers from "./Teachers";
+import Products from "./Products";
 import Navbar from './Navigation';
-import TeacherSection from "./TeacherSection";
+import BannerSection from "./BannerSection";
 import HomeAnimation from "../images/Kids-Studying-from-Home.gif"
 import Footer from "./Footer"
 import ListProduct from "./ListProduct";
@@ -69,7 +69,7 @@ function Home() {
                 </div>
             </div>
 
-            {!auth ? <TeacherSection /> : <p></p>}
+            {!auth ? <BannerSection /> : <p></p>}
             {auth ? <ListProduct /> : <p></p>}
             
             <Footer />

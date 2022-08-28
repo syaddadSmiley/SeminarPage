@@ -1,5 +1,5 @@
 
-export default function TeacherSection() {
+export default function BannerSection() {
 
     return (
         <div className="jumbotron jumbotron-fluid my-5 py-5">

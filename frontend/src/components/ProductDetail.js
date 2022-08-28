@@ -9,7 +9,7 @@ import GetCookie from "../hooks/GetCookies";
 import Modal from "./Modal";
 
 
-const TeacherDetail = () => {
+const ProductDetail = () => {
     const [modalShow, setModalShow] = React.useState(false);
     const [detail, setDetail] = useState(null);
     const [wishlist, setWishlist] = useState(null);
@@ -184,4 +184,4 @@ const TeacherDetail = () => {
     );
 };
 
-export default TeacherDetail;
+export default ProductDetail;

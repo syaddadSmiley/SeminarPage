@@ -10,7 +10,7 @@ import pass from "../assets/images/icons8-show-password-64.png";
 import out from "../assets/images/icons8-logout-24.png";
 import "bootstrap/dist/css/bootstrap.min.css";
 // import "boxicons";
-import "../style/NavVideo.css";
+
 
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";

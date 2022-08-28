@@ -197,6 +197,7 @@ a[data-toggle="collapse"] {
 }
 #logoutNav-home{
     background-color: #dc3545;
+    margin-right: 10px;
     padding: 5px;
 }
 #profileNav-home{

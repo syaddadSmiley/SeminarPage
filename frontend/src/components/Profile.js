@@ -8,7 +8,7 @@ import Footer from './Footer'
 import GetCookie from "../hooks/GetCookies";
 import jwt_decode from "jwt-decode";
 
-const StudentProfile = () => {
+const Profile = () => {
     const [detail, setDetail] = useState(null);
     const [loading, setLoading] = useState(false);
     const [isUpdating, setIsUpdating] = useState(false)
@@ -175,4 +175,4 @@ const CInputForm = ({ onChange, value, disabled }) => {
     )
 }
 
-export default StudentProfile;
+export default Profile;

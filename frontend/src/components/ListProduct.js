@@ -4,12 +4,12 @@ import { Link } from "react-router-dom";
 import '../../node_modules/bootstrap/dist/css/bootstrap.min.css'
 import '../style/Home.css';
 import '../App.css';
-import Teachers from "./Teachers";
+import Products from "./Products";
 import Navbar from './Navigation';
-import TeacherSection from "./TeacherSection";
+import BannerSection from "./BannerSection";
 import HomeAnimation from "../images/Kids-Studying-from-Home.gif"
 import Footer from "./Footer"
-import '../style/Teachers.css'
+import '../style/Products.css'
 
 export default function ListProduct() {
     const auth = JSON.parse(localStorage.getItem("user-info"));
@@ -77,7 +77,7 @@ export default function ListProduct() {
                 }).map((item, index) => {
                     return <div className="cards" key={index}>
                         <Link to={`/teacher/${item.id}`}>
-                            <Teachers
+                            <Products
                                 judul={item.judul}
                                 deskripsi={item.deskripsi}
                                 jenisProduct={item.jenisProducts}

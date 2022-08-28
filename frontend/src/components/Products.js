@@ -1,8 +1,8 @@
 import React, { useState } from "react"
-import '../style/Teachers.css'
+import '../style/Products.css'
 import '../hooks/ForProducts'
 
-export default function Teachers({ judul, jenisProduct, deskripsi, lokasi, harga, image}) {
+export default function Products({ judul, jenisProduct, deskripsi, lokasi, harga, image}) {
 
     return (
 
@@ -17,7 +17,7 @@ export default function Teachers({ judul, jenisProduct, deskripsi, lokasi, harga
                 </a>
                 <h2>
                     {judul.length > 20 ? <p style={{fontSize: '21px', marginBottom: '0px'}}>{judul}</p> : judul}
-                    <small>{jenisProduct}</small>
+                    <small>{jenisProduct} | {lokasi}</small>
                 </h2>
             </div>
             {/* <div class="card-flap flap1 show">
