@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import "boxicons";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "../style/UbahProfil.css";
-import useStore from "../store/user";
 // import ProfIcon from "../assets/images/profil-icon.svg";
 // import Avatar2 from "../assets/images/Ani.png";
 // import Avatar3 from "../assets/images/Adi.png";
