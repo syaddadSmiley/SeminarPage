@@ -8,6 +8,7 @@ import { NavLink, useNavigate, useParams } from "react-router-dom";
 import Modal from "react-modal";
 import CInputImage from "../../CInputImage";
 import ConvertTime from "../../../hooks/ConvertTime";
+import '../../../style/AdminEditor.css'
 
 Modal.setAppElement("#root");
 
@@ -34,6 +35,7 @@ function AdminPage() {
 
   const checkTokenAdmin = GetCookie("token");
   const checkRole = jwt_decode(checkTokenAdmin);
+  const auth = JSON.parse(localStorage.getItem("user-info"));
 
   useEffect(() => {
     if (checkRole.Role !== "admin") {
@@ -109,6 +111,18 @@ function AdminPage() {
         console.log(error);
       }
     };
+    const fetchArticle2 = async () => {
+      try {
+        const resGet = await axios.get("http://localhost:8008/GetCategory", {
+          withCredentials: true,
+        });
+        setArticles2(resGet.data.data);
+        console.log(resGet.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchArticle2();
     fetchArticle();
   }, []);
 
@@ -216,6 +230,7 @@ function AdminPage() {
           },
         }}
       >
+
         <h1 className="text-center">Edit</h1>
         <div className="row"></div>
         <div className="col"></div>
@@ -342,8 +357,6 @@ function AdminPage() {
             onChange={(e) => handle(e)}
           ></input>
 
-          
-
           <div className="col-sm-3">
             <input
               type="submit"
@@ -379,7 +392,7 @@ function AdminPage() {
             Input Data
           </button>
         </div>
-
+          
         <div className="content-tabs">
           <div
             className={
@@ -413,6 +426,7 @@ function AdminPage() {
                       {/* <td>{article.deskripsi.substring(0, 15)}...</td> */}
                       <td>
                         <button
+                          id="buttonED"
                           type="button"
                           className="btn btn-warning me-2"
                           // onClick={() => setMopen(true)}
@@ -421,6 +435,7 @@ function AdminPage() {
                           Edit
                         </button>
                         <button
+                          id="buttonED"
                           type="button"
                           className="btn btn-danger"
                           onClick={() => handleDelete(article.id)}
@@ -441,6 +456,7 @@ function AdminPage() {
                       {/* <td>{article.deskripsi.substring(0, 20)}...</td> */}
                       <td>
                         <button
+                          id="buttonED"
                           type="button"
                           className="btn btn-warning me-2"
                           // onClick={() => setMopen(true)}
@@ -449,6 +465,7 @@ function AdminPage() {
                           Edit
                         </button>
                         <button
+                          id="buttonED"
                           type="button"
                           className="btn btn-danger"
                           onClick={() => handleDelete(article.id)}
@@ -467,6 +484,29 @@ function AdminPage() {
               toggleState === 2 ? "content  active-content" : "content"
             }
           >
+            <div className="card" style={{ border: '100px' }}>
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Id</th>
+                    <th scope="col">Category</th>
+                  </tr>
+                </thead>
+            
+                <tbody>
+                {articles2.map((article, index) =>
+                    <tr key={index}>
+                      <th scope="row">{index}</th>
+                      <td>{article.jenis}</td>
+                      {/* <td>{article.deskripsi}</td> */}
+                      {/* <td>{article.deskripsi.substring(0, 15)}...</td> */}
+        
+                    </tr>
+
+                    )}
+                </tbody>
+              </table>
+            </div>
             <form onSubmit={submit}>
               <div className="card" aria-label="Post Card" style={{marginTop: '15px',}}>
                 <img src={data.gambar} className="card-image-top" style={{ maxHeight: '300px', maxWidth: '200px' }} />

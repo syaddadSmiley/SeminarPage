@@ -1,7 +1,7 @@
 package api
 
 import (
-	repoz "project/repository"
+	repoz "github.com/syaddadSmiley/SeminarPage/repository"
 
 	"github.com/golang-jwt/jwt/v4"
 )

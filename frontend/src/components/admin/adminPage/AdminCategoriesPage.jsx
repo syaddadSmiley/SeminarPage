@@ -6,6 +6,7 @@ import GetCookie from "../../../hooks/GetCookies";
 import jwt_decode from "jwt-decode";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import Modal from "react-modal";
+import '../../../style/AdminEditor.css'
 
 Modal.setAppElement("#root");
 
@@ -274,7 +275,7 @@ function AdminPage() {
               <thead>
                 <tr>
                   <th scope="col">Id</th>
-                  <th scope="col">Judul</th>
+                  <th scope="col">Categories</th>
                   <th scope="col">Actions</th>
                 </tr>
               </thead>
@@ -288,6 +289,7 @@ function AdminPage() {
                       {/* <td>{article.deskripsi.substring(0, 15)}...</td> */}
                       <td>
                         <button
+                          id="buttonED"
                           type="button"
                           className="btn btn-warning me-2"
                           // onClick={() => setMopen(true)}
@@ -296,6 +298,7 @@ function AdminPage() {
                           Edit
                         </button>
                         <button
+                          id="buttonED"
                           type="button"
                           className="btn btn-danger"
                           onClick={() => handleDelete(article.id)}

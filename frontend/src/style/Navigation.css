@@ -82,10 +82,6 @@
     outline: none;
 }
 
-.navbar {
-    padding: 1rem;
-}
-
 .main-menu {
     position: relative;
     z-index: 3;

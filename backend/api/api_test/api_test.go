@@ -6,9 +6,10 @@ import (
 	"log"
 	"net/http"
 	"net/http/httptest"
-	api "project/api"
-	repository "project/repository"
 	"strings"
+
+	api "github.com/syaddadSmiley/SeminarPage/api"
+	repository "github.com/syaddadSmiley/SeminarPage/repository"
 
 	. "github.com/onsi/ginkgo/v2"
 	. "github.com/onsi/gomega"

@@ -4,8 +4,9 @@ import (
 	"fmt"
 	"log"
 	"net/http"
-	repoz "project/repository"
 	"strconv"
+
+	repoz "github.com/syaddadSmiley/SeminarPage/repository"
 
 	"github.com/gin-gonic/gin"
 )

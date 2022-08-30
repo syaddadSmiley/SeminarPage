@@ -9,6 +9,8 @@ function Admin() {
       <br></br>
       <br></br>
       <br></br>
+      <br></br>
+      <br></br>
       <AdminPageCategories />
     </>
   );

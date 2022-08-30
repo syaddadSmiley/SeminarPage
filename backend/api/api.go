@@ -2,7 +2,8 @@ package api
 
 import (
 	"fmt"
-	repository "project/repository"
+
+	repository "github.com/syaddadSmiley/SeminarPage/repository"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -47,7 +48,6 @@ func NewAPI(userRepo repository.UserRepo, adminRepo repository.AdminRepo) *API {
 	gin.POST("/Coupons/use", api.AuthMiddleWare(api.UseCoupon))
 
 	gin.POST("/Basket", api.AuthMiddleWare(api.Basket))
-
 	gin.POST("GetBasket", api.AuthMiddleWare(api.CheckBasket))
 
 	gin.GET("/Pagination", api.AuthMiddleWare(api.Pagination))

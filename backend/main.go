@@ -1,9 +1,9 @@
 package main
 
 import (
-	"project/api"
-	con "project/database"
-	repository "project/repository"
+	"github.com/syaddadSmiley/SeminarPage/api"
+	con "github.com/syaddadSmiley/SeminarPage/database"
+	repository "github.com/syaddadSmiley/SeminarPage/repository"
 
 	_ "github.com/mattn/go-sqlite3"
 )

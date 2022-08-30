@@ -3,3 +3,4 @@
 ./simple-product-card
 ./3d-fold-out-reveal
 ./frontend/node_modules
+./.vscode

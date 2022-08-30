@@ -11,7 +11,7 @@ import (
 
 	"github.com/golang-jwt/jwt/v4"
 
-	repoz "project/repository"
+	repoz "github.com/syaddadSmiley/SeminarPage/repository"
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
