@@ -73,11 +73,11 @@ export default function Register() {
             aman = false;
         } else if (/^(?=.*[a-z])(?=.*[A-Z])/.test(password) == false){
             setPassErr(true)
-            setPassMsg("Password setidak nya harus mengandung 1 huruf kecil dan 1 huruf besar")
+            setPassMsg("Password setidak nya harus mengandung 1 huruf kecil dan 1 huruf besar dan 1 angka")
             aman = false;
         } else if (/^(?=.*[0-9])/.test(password) == false){
             setPassErr(true)
-            setPassMsg("Password setidak nya harus mengandung 1 angka")
+            setPassMsg("Password setidak nya harus mengandung 1 huruf kecil dan 1 huruf besar dan 1 angka")
             aman = false;
         } else {
             setPassErr(false)
@@ -112,6 +112,8 @@ export default function Register() {
                 setMail("")
                 setPassword("")
                 setNo_hp("")
+                setConfirmPassword("")
+                navigate('/login')
             }
 
         }
@@ -124,7 +126,7 @@ export default function Register() {
             <div className='register-wrapper d-flex'>
                 <div className="register-right">
                     <img src={image} className="align-middle" />
-                    <p className="text-justify align-middle">Tempat terpercaya mencari guru private terbaik</p>
+                    <p className="text-justify align-middle">Si Paling Rajin</p>
                 </div>
                 <div className="register-left">
                     <form>

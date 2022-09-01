@@ -131,7 +131,7 @@ const ProductDetail = () => {
                             {/* <div class="slider-arrows"><i class="fa fa-fw fa-arrow-circle-o-left" id="prev-slide"></i><i class="fa fa-fw fa-arrow-circle-o-right" id="next-slide"></i></div> */}
                             <div id="slider-wrap" style={{background: '#ffff'}}>
                                 <ul class="slides">
-                                    <li><img src={detail?.gambar} alt="" style={{ maxWidth: '380px', maxHeight: '380px'}}/></li>
+                                    <li><img src={detail?.gambar} alt="" style={{ maxWidth: '380px', maxHeight: '380px', marginRight: 'auto', marginLeft: 'auto', display:'flex', justifyContent: 'center', alignItems: 'center'}}/></li>
                                    
                                 </ul>
                                 {/* <ul class="nav-dots">

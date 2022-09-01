@@ -85,22 +85,22 @@ function NavAdmin() {
             <br></br>
           </p>
         </a>
-        <Link to="/admin/categories" class="list-group-item list-group-item-action list-group-item-dark">
+        <Link to="/admin/categories" class="list-group-item list-group-item-action list-group-item-dark" style={{paddingBottom: '25px'}}>
           <div class="image" />
           <img alt="" src={kelas} width="20" height="20" />
           Categories
         </Link>
-        <Link to="/admin/seminars" class="list-group-item list-group-item-action list-group-item-dark">
+        <Link to="/admin/seminars" class="list-group-item list-group-item-action list-group-item-dark" style={{ paddingBottom: '25px' }}>
           <div class="image" />
           <img alt="" src={edit} width="20" height="20" />
           Seminars
         </Link>
-        <Link to="/ubah-pass" class="list-group-item list-group-item-action list-group-item-dark">
+        {/* <Link to="/ubah-pass" class="list-group-item list-group-item-action list-group-item-dark" style={{ paddingBottom: '25px' }}>
           <div class="image" />
           <img alt="" src={pass} width="20" height="20" />
           Ubah Password
-        </Link>
-        <Link to="/login" onClick={logout} class="list-group-item list-group-item-action list-group-item-dark">
+        </Link> */}
+        <Link to="/login" onClick={logout} class="list-group-item list-group-item-action list-group-item-dark" style={{ paddingBottom: '25px' }}>
           <div class="image" />
           <img alt="" src={out} width="20" height="20" />
           Keluar

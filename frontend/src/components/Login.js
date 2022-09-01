@@ -127,7 +127,7 @@ function Login() {
 
                 <div className="login-right">
                     <img src={image} className="align-middle" alt="hallo guru" />
-                    <p className="text-justify align-middle">Tempat terpercaya mencari guru private terbaik</p>
+                    <p className="text-justify align-middle">Si Paling Rajin</p>
                 </div>
             </div>
 

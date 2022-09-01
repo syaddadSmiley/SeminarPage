@@ -20,16 +20,6 @@ export default function Products({ judul, jenisProduct, deskripsi, lokasi, harga
                     <small>{jenisProduct} | {lokasi}</small>
                 </h2>
             </div>
-            {/* <div class="card-flap flap1 show">
-                <div class="card-description">
-                    {deskripsi}
-                </div>
-                <div class="card-flap flap2">
-                    <div class="card-actions">
-                        <a href="#" class="btn">Read more</a>
-                    </div>
-                </div>
-            </div> */}
         </div>
     )
 }

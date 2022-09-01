@@ -26,9 +26,8 @@ export default function BannerSection() {
                             </ul>
                         </div>
                         <div className="col-md-6 item text">
-                            <h3>HALOGURU</h3>
-                            <p>inovasi baru untuk mencari pendidik dengan sangat cepat.
-                                Kegiatan belajar mengajar menjadi lebih mudah dengan menghadirkan tenaga didik ke rumah.</p>
+                            <h3>Sipaling-Rajin</h3>
+                            <p>Tempat untuk mencari seminar</p>
                         </div>
                         <div className="col item social">
                             <a href="#"><i className="icon"><FaFacebook /></i></a>

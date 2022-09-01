@@ -48,17 +48,17 @@ function Home() {
                         <h3>SIPALING RAJIN</h3>
                         <p>Wadah untuk mencari seminar dikala kamu membutuhkannya,membantumu berubah dan berkembang jadi lebih baik karena rahasia untuk maju adalah memulainya</p>
                         <div className="d-flex flex-wrap col-md-12 pt-5">
-                            <div className="col-md-4 col-sm-6 col-12">
+                            <div className="col-md-4 col-sm-6 col-12" >
                                 <div className="card card-fitur">
                                     <p>"Jika tidak ada perjuangan, tidak ada kemajuan."</p>
                                 </div>
                             </div>
-                            <div className="col-md-4 col-sm-6 col-12">
+                            <div className="col-md-4 col-sm-6 col-12" >
                                 <div className="card card-fitur">
                                     <p>"Pemenang tidak pernah takut, penakut tidak pernah menang."</p>
                                 </div>
                             </div>
-                            <div className="col-md-4 col-sm-6 col-12">
+                            <div className="col-md-4 col-sm-6 col-12" >
                                 <div className="card card-fitur">
                                     <p>"Memperbaiki diri kita adalah memperbaiki dunia."</p>
                                 </div>

@@ -14,8 +14,7 @@ function Tentang() {
             <Navbar />
             <div className="container my-5">
                 <h3>Tentang Kami</h3>
-                <p>PT Hallo Raya Indonesia, melakukan bisnis sebagai Halloguru, adalah sebuah perusahaan rintisan digital asal Indonesia untuk anak berkebutuhan khusus yang bergerak di bidang pendidikan nonformal.
-                    Halloguru menawarkan platform pembelajaran berbasis kurikulum sekolah melalui video tutorial interaktif oleh guru dan atau mendatangi guru ke rumah secara langsung. Perusahaan ini didirikan oleh Amalia Suherman, Dinda Wahyu Rahmadani, Fermi Naufal Akbar, Gilang Safera Putra, dan Shafa Salsabilla Buchori pada Juni 2022.</p>
+                <p>Sipaling-rajin merupakan sebuah website seminar yang dibuat oleh ananda dwi dan syaddad auliarachman yang bertujuan untuk memenuhi kegiatan akhir di semester 6</p>
             </div>
 
             <section id="team" className="teamXXX content-section">
@@ -27,7 +26,7 @@ function Tentang() {
                                     <div className="team-member">
                                         <figure>
                                             <img
-                                                src="http://www.mauritiusdsilva.com/themes/hallooou/assets/images/jessie-barnett.jpg"
+                                                src="https://i.pinimg.com/originals/ca/e9/bf/cae9bfb535e2ca3d2771782c866af7df.png"
                                                 alt="" className="img-responsive" />
                                             <figcaption>
                                                 <p>Temporibus dolor, quisquam consectetur molestias, veniam voluptatum.
@@ -49,7 +48,7 @@ function Tentang() {
                                     <div className="team-member">
                                         <figure>
                                             <img
-                                                src="http://www.mauritiusdsilva.com/themes/hallooou/assets/images/terry-fletcher.jpg"
+                                                src="https://upload.wikimedia.org/wikipedia/en/0/00/Professor_Charles_%27X%27_Xavier.png"
                                                 alt="" className="img-responsive" />
                                             <figcaption>
                                                 <p>Temporibus dolor, quisquam consectetur molestias, veniam voluptatum.

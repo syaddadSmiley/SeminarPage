@@ -17,6 +17,8 @@ import DashboardAdmin from './pages/DashboardAdmin';
 import UbahProfil from './components/UbahProfil';
 import NavAdmin from './components/NavAdmin';
 import WishlistAll from './components/WishlistAll'
+import PaginateProduct from './components/PaginateProduct';
+import SearchProduct from './components/SearchProduct';
 
 function App() {
 
@@ -34,13 +36,15 @@ function App() {
         <Route path="login" element={<Login />} />
         <Route path="register" element={<Register />} />
         <Route element={<PrivateComponent />}>
-          <Route path="teacher/:id" element={<ProductDetail />} />
+          <Route path="product/search" element={<SearchProduct />} />
+          <Route path="product/:id" element={<ProductDetail />} />
           <Route path="profile" element={<Profile />} />
           <Route path="wishlist/all" element={<WishlistAll/>} />
           <Route path="admin" element={<DashboardAdmin />} />
           <Route path="admin/categories" element={<AdminCategories />} />
           <Route path="admin/seminars" element={<AdminSeminars />} />
         </Route>
+        <Route path="/pagination" element={<PaginateProduct/>} />
         <Route path="*" element={<NotFound />} />
         <Route path="Tentang" element={<Tentang />} />
       </Routes>

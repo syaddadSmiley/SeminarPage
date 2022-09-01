@@ -65,7 +65,7 @@ export default function WishlistAll() {
                     }
                 }).map((item, index) => {
                     return <div className="cards" key={index}>
-                        <Link to={`/teacher/${item.id}`}>
+                        <Link to={`/product/${item.id}`}>
                             <Products
                                 judul={item.judul}
                                 deskripsi={item.deskripsi}

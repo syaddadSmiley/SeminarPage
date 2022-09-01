@@ -17,6 +17,89 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
+func (api *API) Pagination(c *gin.Context) {
+	api.alloworigin(c)
+	var (
+		page    int
+		perPage int
+		offset  int
+		total   int
+		message string
+		isError bool
+	)
+
+	params := c.Request.URL.Query()
+
+	_, err := fmt.Sscan(params.Get("per_page"), &perPage)
+	_, err = fmt.Sscan(params.Get("page"), &page)
+
+	if err != nil && err.Error() != "EOF" {
+		c.JSON(http.StatusBadRequest, Result{
+			Status:  false,
+			Code:    http.StatusBadRequest,
+			Message: "Throw a param with the value convertible to a number, ERROR: " + err.Error(),
+			Data:    []string{},
+		})
+		return
+	}
+
+	//Perhalaman nya
+
+	if perPage == 0 {
+		perPage = 50
+	}
+
+	if page == 0 {
+		page = 1
+	}
+
+	offset = (page - 1) * perPage
+
+	defer func() {
+		if isError {
+			c.JSON(http.StatusInternalServerError, Result{
+				Status:  false,
+				Code:    http.StatusInternalServerError,
+				Message: "Failed to fetch, ERROR: " + message,
+				Data:    nil,
+			})
+			return
+		}
+	}()
+
+	teachers, err := api.userRepo.Allproduk(perPage, offset)
+	if err != nil {
+		isError = true
+		message = err.Error()
+		return
+	}
+
+	total, err = api.userRepo.GetRowProducts()
+	if err != nil {
+		isError = true
+		message = err.Error()
+		return
+	}
+
+	totalPage := 1
+	if total > perPage {
+		totalPage = int(math.Ceil(float64(total) / float64(perPage)))
+	}
+
+	c.JSON(http.StatusOK, Result{
+		Status:  true,
+		Code:    http.StatusOK,
+		Message: "Success",
+		Data:    teachers,
+		Pagination: &Pagination{
+			Total:     total,
+			Page:      page,
+			PerPage:   perPage,
+			TotalPage: totalPage,
+		},
+	})
+}
+
 func (api *API) Login(c *gin.Context) {
 	api.alloworigin(c)
 	if c.Request.Method == "OPTIONS" {
@@ -130,6 +213,7 @@ func (api *API) Register(c *gin.Context) {
 	}
 
 	if c.Request.Method != "POST" {
+		fmt.Println("TESSSSs")
 		c.JSON(400, gin.H{
 			"status":  400,
 			"message": "Method Not Allowed",
@@ -503,9 +587,37 @@ func (api *API) GetProfile(c *gin.Context) {
 	})
 }
 
-//////////////////////////////////////////////pagination//////////////////////////////////////////
-func (api *API) Pagination(c *gin.Context) {
+func (api *API) DeleteUserByID(c *gin.Context) {
 	api.alloworigin(c)
+	idStr := c.Param("id")
+	id, err := repoz.StringToID(idStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"code":    http.StatusBadRequest,
+			"message": err.Error(),
+		})
+		return
+	}
+
+	_, err = api.userRepo.DeleteUserByID(id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"code":    http.StatusInternalServerError,
+			"message": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"code":    http.StatusOK,
+		"message": "berhasil",
+	})
+}
+
+/////////////////////////////////SearchUser//////////////////////////////////////////////////////////////
+func (api *API) SearchProductUser(c *gin.Context) {
+	api.alloworigin(c)
+
 	var (
 		page    int
 		perPage int
@@ -554,10 +666,49 @@ func (api *API) Pagination(c *gin.Context) {
 		}
 	}()
 
-	teachers, err := api.userRepo.Allproduk(perPage, offset)
+	search := params.Get("search")
+	if search != "" {
+		data, err := api.userRepo.SearchTask(search, perPage, offset)
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{
+				"code":    http.StatusInternalServerError,
+				"message": err.Error(),
+			})
+			return
+		}
+
+		total, err = api.userRepo.GetRowProducts()
+		if err != nil {
+			isError = true
+			message = err.Error()
+			return
+		}
+
+		totalPage := 1
+		if total > perPage {
+			totalPage = int(math.Ceil(float64(total) / float64(perPage)))
+		}
+
+		c.JSON(http.StatusOK, Result{
+			Status:  true,
+			Code:    http.StatusOK,
+			Message: "Success",
+			Data:    data,
+			Pagination: &Pagination{
+				Total:     total,
+				Page:      page,
+				PerPage:   perPage,
+				TotalPage: totalPage,
+			},
+		})
+		return
+	}
+	data, err := api.userRepo.GetTask(perPage, offset)
 	if err != nil {
-		isError = true
-		message = err.Error()
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"code":    http.StatusInternalServerError,
+			"message": err.Error(),
+		})
 		return
 	}
 
@@ -567,7 +718,6 @@ func (api *API) Pagination(c *gin.Context) {
 		message = err.Error()
 		return
 	}
-
 	totalPage := 1
 	if total > perPage {
 		totalPage = int(math.Ceil(float64(total) / float64(perPage)))
@@ -577,147 +727,13 @@ func (api *API) Pagination(c *gin.Context) {
 		Status:  true,
 		Code:    http.StatusOK,
 		Message: "Success",
-		Data:    teachers,
+		Data:    data,
 		Pagination: &Pagination{
 			Total:     total,
 			Page:      page,
 			PerPage:   perPage,
 			TotalPage: totalPage,
 		},
-	})
-}
-
-//////////////////////////////////////////////testing ginkgo//////////////////////////////////////////
-func (api *API) DeleteUser(c *gin.Context) {
-	api.alloworigin(c)
-	var del repoz.DeleteUserReqByUsername
-
-	err := json.NewDecoder(c.Request.Body).Decode(&del)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":    http.StatusBadRequest,
-			"message": "Invalid request body",
-		})
-		return
-	}
-
-	err = api.userRepo.DeleteUser(del.Username)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"code":    http.StatusInternalServerError,
-			"message": err.Error(),
-		})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{
-		"code":    http.StatusOK,
-		"message": "berhasil",
-	})
-}
-
-func (api *API) DeleteUserByID(c *gin.Context) {
-	api.alloworigin(c)
-	idStr := c.Param("id")
-	id, err := repoz.StringToID(idStr)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":    http.StatusBadRequest,
-			"message": err.Error(),
-		})
-		return
-	}
-
-	_, err = api.userRepo.DeleteUserByID(id)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"code":    http.StatusInternalServerError,
-			"message": err.Error(),
-		})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"code":    http.StatusOK,
-		"message": "berhasil",
-	})
-}
-
-//////////////////////////////////////////////sorting barang melalui harga//////////////////////////////////////////
-func (api *API) SortingProduct(c *gin.Context) {
-	api.alloworigin(c)
-	params := c.Request.URL.Query()
-	sort := params.Get("sort")
-	if sort == "asc" {
-		products, err := api.userRepo.SortingAsc()
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"code":    http.StatusInternalServerError,
-				"message": err.Error(),
-			})
-			return
-		}
-		c.JSON(http.StatusOK, gin.H{
-			"code":    http.StatusOK,
-			"message": "berhasil",
-			"data":    products,
-		})
-	} else if sort == "dsc" {
-		products, err := api.userRepo.SortingDsc()
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"code":    http.StatusInternalServerError,
-				"message": err.Error(),
-			})
-			return
-		}
-		c.JSON(http.StatusOK, gin.H{
-			"code":    http.StatusOK,
-			"message": "berhasil",
-			"data":    products,
-		})
-	} else {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":    http.StatusBadRequest,
-			"message": "Invalid request body",
-		})
-		return
-	}
-}
-
-/////////////////////////////////SearchUser//////////////////////////////////////////////////////////////
-func (api *API) SearchProductUser(c *gin.Context) {
-	api.alloworigin(c)
-	params := c.Request.URL.Query()
-	search := params.Get("search")
-	if search != "" {
-		data, err := api.userRepo.SearchTask(search)
-		if err != nil {
-			c.JSON(http.StatusInternalServerError, gin.H{
-				"code":    http.StatusInternalServerError,
-				"message": err.Error(),
-			})
-			return
-		}
-		c.JSON(http.StatusOK, gin.H{
-			"code":    http.StatusOK,
-			"message": "berhasil",
-			"data":    data,
-		})
-		return
-	}
-	data, err := api.userRepo.GetTask()
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"code":    http.StatusInternalServerError,
-			"message": err.Error(),
-		})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"code":    http.StatusOK,
-		"message": "berhasil",
-		"data":    data,
 	})
 
 }
@@ -744,143 +760,6 @@ func (api *API) GetProductByID(c *gin.Context) {
 		"data":    data,
 	})
 
-}
-
-/////////////////////////////////Komentar//////////////////////////////////////////////////////////////
-func (api *API) CreateKomentar(c *gin.Context) {
-	token, err := c.Request.Cookie("token")
-	if err != nil {
-		if err == http.ErrNoCookie {
-			c.Writer.WriteHeader(http.StatusUnauthorized)
-			c.JSON(http.StatusUnauthorized, gin.H{
-				"code":    http.StatusUnauthorized,
-				"message": "anda belum login",
-			})
-			return
-		}
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":    http.StatusBadRequest,
-			"message": err.Error(),
-		})
-		return
-	}
-
-	claims, err := checkToken(token.Value)
-	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"code":    http.StatusUnauthorized,
-			"message": err,
-		})
-		return
-	}
-
-	var komen KomentarInput
-	if err := c.ShouldBindJSON(&komen); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-		return
-	}
-
-	if komen.Content == "" {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "rating tidak boleh kosong"})
-		return
-	} else if komen.Rating < 0 || komen.Rating > 10 {
-		c.JSON(http.StatusUnauthorized, gin.H{"error": "rating tidak boleh kosong"})
-		return
-	}
-	komen.Id_user = claims.Id
-	_, err = api.userRepo.GetProductByID(komen.Id_product)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "product tidak ditemukan"})
-		return
-	}
-
-	komen.Id = repoz.NewID()
-	data, err := api.userRepo.CreateKomentar(komen.Id, komen.Id_product, komen.Id_user, komen.Content, komen.Rating)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"code":    http.StatusInternalServerError,
-			"message": err.Error(),
-		})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"code":    http.StatusOK,
-		"message": "Commented",
-		"data":    data,
-	})
-}
-
-func (api *API) DeleteKomentar(c *gin.Context) {
-	params := c.Request.URL.Query()
-	getId := params.Get("id")
-	id, err := repoz.StringToID(getId)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":    http.StatusBadRequest,
-			"message": err.Error(),
-		})
-		return
-	}
-
-	token, err := c.Request.Cookie("token")
-	if err != nil {
-		if err == http.ErrNoCookie {
-			c.Writer.WriteHeader(http.StatusUnauthorized)
-			c.JSON(http.StatusUnauthorized, gin.H{
-				"code":    http.StatusUnauthorized,
-				"message": "anda belum login",
-			})
-			return
-		}
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":    http.StatusBadRequest,
-			"message": err.Error(),
-		})
-		return
-	}
-
-	res, err := api.userRepo.CheckKomentar(id)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":    http.StatusBadRequest,
-			"message": err.Error(),
-		})
-		return
-	}
-	zero := repoz.ZeroID()
-	if res.Id.String() == zero {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":    http.StatusBadRequest,
-			"message": "komentar tidak ditemukan",
-		})
-		return
-	}
-
-	claims, err := checkToken(token.Value)
-	if claims.Role != "admin" {
-		if res.Id_user != claims.Id {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"code":    http.StatusBadRequest,
-				"message": "cannot delete other user's comment",
-			})
-			return
-		}
-	}
-
-	err = api.userRepo.DeleteKomentar(id)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"code":    http.StatusInternalServerError,
-			"message": err.Error(),
-		})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"code":    http.StatusOK,
-		"message": "Komentar berhasil dihapus",
-	})
 }
 
 /////////////////////////////////Wishlist//////////////////////////////////////////////////////////////
@@ -1055,264 +934,6 @@ func (api *API) DeteleAkun(c *gin.Context) {
 	})
 }
 
-//lanjut sore
-func (api *API) FilterByGame(c *gin.Context) {
-	api.alloworigin(c)
-
-	params := c.Request.URL.Query()
-	idStr := params.Get("id")
-	id, err := strconv.Atoi(idStr)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"errors": "Invalid ID",
-		})
-	}
-	res, err := api.userRepo.FilterByGame(id)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"errors": err,
-		})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{
-		"code":    http.StatusOK,
-		"data":    res,
-		"message": "success",
-	})
-}
-
-func (api *API) UseCoupon(c *gin.Context) {
-	api.alloworigin(c)
-	token, err := c.Request.Cookie("token")
-	if err != nil {
-		if err == http.ErrNoCookie {
-			c.Writer.WriteHeader(http.StatusUnauthorized)
-			c.JSON(http.StatusUnauthorized, gin.H{
-				"code":    http.StatusUnauthorized,
-				"message": "anda belum login",
-			})
-			return
-		}
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":    http.StatusBadRequest,
-			"message": err.Error(),
-		})
-		return
-	}
-
-	claims, err := checkToken(token.Value)
-	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"code":    http.StatusUnauthorized,
-			"message": err,
-		})
-		return
-	}
-
-	params := c.Request.URL.Query()
-	kode := params.Get("kupon")
-
-	if kode == "" {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"errors": "Kode kupon tidak boleh kosong",
-		})
-		return
-	}
-
-	var kupon repoz.UseCoupon
-	kupon.Kode = kode
-	kupon.IdUser = claims.Id
-
-	check, err := api.userRepo.CheckCoupon(kupon.Kode)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":   http.StatusBadRequest,
-			"errors": err,
-		})
-		return
-	}
-	if check.Kode == "" {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":   http.StatusBadRequest,
-			"errors": "Kode kupon tidak ditemukan",
-		})
-		return
-	}
-
-	data, err := api.userRepo.ValidateCoupon(kupon)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":   http.StatusBadRequest,
-			"errors": err,
-		})
-		return
-	}
-	if data.Status == "used" {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":   http.StatusBadRequest,
-			"errors": "Kupon sudah digunakan",
-		})
-		return
-	}
-	kupon.Id = repoz.NewID()
-	kupon.Status = "used"
-
-	_, err = api.userRepo.UseCoupon(kupon)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"errors": err,
-		})
-		return
-	}
-
-	res, err := api.userRepo.ValidateCoupon(kupon)
-	c.JSON(http.StatusOK, gin.H{
-		"code":    http.StatusOK,
-		"data":    res,
-		"message": "success",
-	})
-}
-
-func (api *API) GetNotification(c *gin.Context) {
-	api.alloworigin(c)
-	token, err := c.Request.Cookie("token")
-	if err != nil {
-		if err == http.ErrNoCookie {
-			c.Writer.WriteHeader(http.StatusUnauthorized)
-			c.JSON(http.StatusUnauthorized, gin.H{
-				"code":    http.StatusUnauthorized,
-				"message": "anda belum login",
-			})
-			return
-		}
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":    http.StatusBadRequest,
-			"message": err.Error(),
-		})
-		return
-	}
-
-	_, err = checkToken(token.Value)
-	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"code":    http.StatusUnauthorized,
-			"message": err,
-		})
-		return
-	}
-
-	res, err := api.userRepo.GetNotification()
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":    http.StatusBadRequest,
-			"message": err.Error(),
-		})
-		return
-	}
-	c.JSON(http.StatusOK, gin.H{
-		"code":    http.StatusOK,
-		"data":    res,
-		"message": "success",
-	})
-}
-
-func (api *API) Basket(c *gin.Context) {
-	api.alloworigin(c)
-	token, err := c.Request.Cookie("token")
-	if err != nil {
-		if err == http.ErrNoCookie {
-			c.Writer.WriteHeader(http.StatusUnauthorized)
-			c.JSON(http.StatusUnauthorized, gin.H{
-				"code":    http.StatusUnauthorized,
-				"message": "anda belum login",
-			})
-			return
-		}
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":    http.StatusBadRequest,
-			"message": err.Error(),
-		})
-		return
-	}
-
-	claims, err := checkToken(token.Value)
-	if err != nil {
-		c.JSON(http.StatusUnauthorized, gin.H{
-			"code":    http.StatusUnauthorized,
-			"message": err.Error(),
-		})
-		return
-	}
-
-	params := c.Request.URL.Query()
-	id := params.Get("id")
-	if id == "" {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"errors": "Id produk tidak boleh kosong",
-		})
-		return
-	}
-	var basket repoz.Basket
-	x, err := repoz.StringToID(id)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"errors": err.Error(),
-		})
-		return
-	}
-	basket.Id_user = claims.Id
-	basket.Id_product = x
-
-	check, err := api.userRepo.CheckBasket(basket.Id_user, basket.Id_product)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":   http.StatusBadRequest,
-			"errors": err.Error(),
-		})
-		return
-	}
-	zero := repoz.ZeroID()
-	if check.Id.String() != zero {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":   http.StatusBadRequest,
-			"errors": "Produk sudah ada di keranjang",
-		})
-		return
-	}
-
-	_, err = api.userRepo.GetProductByID(basket.Id_product)
-	if err != nil {
-		if err.Error() == "sql: no rows in result set" {
-			c.JSON(http.StatusBadRequest, gin.H{
-				"code":   http.StatusBadRequest,
-				"errors": "Produk tidak ditemukan",
-			})
-			return
-		}
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":   http.StatusBadRequest,
-			"errors": err.Error(),
-		})
-		return
-	}
-
-	idBasket := repoz.NewID()
-	_, err = api.userRepo.AddBasket(idBasket, basket.Id_user, basket.Id_product)
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":   http.StatusBadRequest,
-			"errors": err.Error(),
-		})
-		return
-	}
-
-	c.JSON(http.StatusOK, gin.H{
-		"code":    http.StatusOK,
-		"message": "success",
-	})
-
-}
-
 func (api *API) GetWishlist(c *gin.Context) {
 	api.alloworigin(c)
 	params := c.Request.URL.Query()
@@ -1396,34 +1017,75 @@ func (api *API) GetAllWishlist(c *gin.Context) {
 		return
 	}
 
+	// var (
+	// 	page    int
+	// 	perPage int
+	// 	offset  int
+	// 	total   int
+	// 	message string
+	// 	isError bool
+	// )
+
+	// params := c.Request.URL.Query()
+
+	// _, err = fmt.Sscan(params.Get("per_page"), &perPage)
+	// _, err = fmt.Sscan(params.Get("page"), &page)
+
+	// if err != nil && err.Error() != "EOF" {
+	// 	c.JSON(http.StatusBadRequest, Result{
+	// 		Status:  false,
+	// 		Code:    http.StatusBadRequest,
+	// 		Message: "Throw a param with the value convertible to a number, ERROR: " + err.Error(),
+	// 		Data:    []string{},
+	// 	})
+	// 	return
+	// }
+
+	// if perPage == 0 {
+	// 	perPage = 50
+	// }
+
+	// if page == 0 {
+	// 	page = 1
+	// }
+
+	// offset = (page - 1) * perPage
+
+	// defer func() {
+	// 	if isError {
+	// 		c.JSON(http.StatusInternalServerError, Result{
+	// 			Status:  false,
+	// 			Code:    http.StatusInternalServerError,
+	// 			Message: "Failed to fetch, ERROR: " + message,
+	// 			Data:    nil,
+	// 		})
+	// 		return
+	// 	}
+	// }()
+
 	res, err := api.userRepo.GetAllWishlist(id)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"code":  http.StatusInternalServerError,
+			"error": err.Error(),
+		})
+		return
+	}
+	// total, err = api.userRepo.GetRowWishlist(id)
+	// if err != nil {
+	// 	isError = true
+	// 	message = err.Error()
+	// 	return
+	// }
+
+	// totalPage := 1
+	// if total > perPage {
+	// 	totalPage = int(math.Ceil(float64(total) / float64(perPage)))
+	// }
 
 	c.JSON(http.StatusOK, gin.H{
 		"code":    http.StatusOK,
-		"data":    res,
 		"message": "success",
+		"data":    res,
 	})
-}
-
-func (api *API) CheckBasket(c *gin.Context) {
-	api.alloworigin(c)
-	var CheckBasket repoz.Basket
-	err := json.NewDecoder(c.Request.Body).Decode(&CheckBasket)
-
-	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
-			"code":    http.StatusBadRequest,
-			"message": "Invalid request body",
-		})
-		return
-	}
-	Data, err := api.userRepo.CheckBasket(CheckBasket.Id_user, CheckBasket.Id_product)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"code":    http.StatusInternalServerError,
-			"Data":    Data,
-			"message": err.Error(),
-		})
-		return
-	}
 }

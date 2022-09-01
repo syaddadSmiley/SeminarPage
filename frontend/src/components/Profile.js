@@ -27,9 +27,6 @@ const Profile = () => {
             const { data } = await axios.get(url, { withCredentials: true, });
 
             setDetail(data.data);
-            console.log("WDWDWDWDDW")
-            console.log("profile user : ", data.data);
-            console.log("GAMBAR", detail?.gambar)
         } catch (error) {
             console.log(error);
         }
@@ -81,7 +78,7 @@ const Profile = () => {
             setModal({
                 isShow: true,
                 message: res.data.message,
-                onHide: () => { navigate("/home") }
+                onHide: () => { window.location.reload(); }
             })
 
         } catch (error) {

@@ -17,6 +17,7 @@ function AdminPage() {
   const [base64Image, setBase64Image] = useState(null)
   // const param = useParams();
   // console.log(param);
+  const [searchTerm, setSearchTerm] = useState("");
   const [toggleState, setToggleState] = useState(1);
   const [articles2, setArticles2] = useState([]);
   const [articles, setArticles] = useState([]);
@@ -218,6 +219,9 @@ function AdminPage() {
         style={{
           overlay: {
             backgroun: "transparent !important",
+            zIndex: '500',
+            position: 'absolute',
+            height: '1500px'
           },
           content: {
             top: "50%",
@@ -239,7 +243,30 @@ function AdminPage() {
             <img src={data.gambar} className="card-image-top" style={{ maxHeight: '300px', maxWidth: '200px' }} />
           </div> */}
           <CInputImage value={data?.gambar} onFileChange={(value) => setBase64Image(value)} isShowUploadButton={isEditMode} resetDefaultState={isEditMode} style={{ maxHeight: '300px', maxWidth: '200px' }} />
+      
+          <div className="card" style={{ border: '100px' }}>
+            <table className="table">
+              <thead>
+                <tr>
+                  <th scope="col">Id</th>
+                  <th scope="col">Category</th>
+                </tr>
+              </thead>
 
+              <tbody>
+                {articles2.map((article, index) =>
+                  <tr key={index}>
+                    <th scope="row">{index + 1}</th>
+                    <td>{article.jenis}</td>
+                    {/* <td>{article.deskripsi}</td> */}
+                    {/* <td>{article.deskripsi.substring(0, 15)}...</td> */}
+
+                  </tr>
+
+                )}
+              </tbody>
+            </table>
+          </div>
           {/* <div className="mb-2"></div>
           <label htmlFor="inputJudul3" className="col-sm-3 col-form-label">
             Category
@@ -399,6 +426,21 @@ function AdminPage() {
               toggleState === 1 ? "content  active-content" : "content"
             }
           >
+            <div className="d-flex justify-content-center my-5">
+              <div className="col-md-5 mx-3">
+                <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Cari..."
+                  onChange={(event) => {
+                    setSearchTerm(event.target.value)
+                  }}
+                />
+              </div>
+              <button type="button" className="btn btn-primary">
+                Cari
+              </button>
+            </div>
             <table className="table">
               <thead>
                 <tr>
@@ -411,8 +453,20 @@ function AdminPage() {
                   <th scope="col">Kapasitas</th>
                 </tr>
               </thead>
+              
               <tbody>
-                {articles.map((article, index) =>
+                
+                {articles.filter((item)=>{
+                  if (searchTerm == "") return item;
+                  else if (item.deskripsi.toLowerCase().includes(searchTerm.toLocaleLowerCase()) ||
+                    item.judul.toLowerCase().includes(searchTerm.toLocaleLowerCase()) ||
+                    item.jenisProducts.toLowerCase().includes(searchTerm.toLocaleLowerCase()) ||
+                    item.lokasi.toLowerCase().includes(searchTerm.toLocaleLowerCase())
+
+                  ) {
+                    return item
+                  }
+                }).map((article, index) =>
                   article.deskripsi.length > 25 ? (
                     <tr key={index}>
                       <th scope="row">{article.jenisProducts}</th>
@@ -496,7 +550,7 @@ function AdminPage() {
                 <tbody>
                 {articles2.map((article, index) =>
                     <tr key={index}>
-                      <th scope="row">{index}</th>
+                      <th scope="row">{index+1}</th>
                       <td>{article.jenis}</td>
                       {/* <td>{article.deskripsi}</td> */}
                       {/* <td>{article.deskripsi.substring(0, 15)}...</td> */}
@@ -509,7 +563,7 @@ function AdminPage() {
             </div>
             <form onSubmit={submit}>
               <div className="card" aria-label="Post Card" style={{marginTop: '15px',}}>
-                <img src={data.gambar} className="card-image-top" style={{ maxHeight: '300px', maxWidth: '200px' }} />
+                <img src={base64Image} className="card-image-top" style={{ maxHeight: '300px', maxWidth: '200px' }} />
               </div>
               <CInputImage value={data?.gambar} onFileChange={(value) => setBase64Image(value)} isShowUploadButton={isEditMode} resetDefaultState={isEditMode} style={{ maxHeight: '300px', maxWidth: '200px' }} />
               {/* <img src={detail?.profile_pict} /> */}

@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	"time"
 )
 
 type UserRepo struct {
@@ -187,6 +186,17 @@ func (u *UserRepo) GetRowProducts() (int, error) {
 	return total, nil
 }
 
+func (u *UserRepo) GetRowWishlist(id ID) (int, error) {
+	sqlStmt := `SELECT COUNT(*) FROM wishlist_item WHERE id_user = ?`
+	var total int
+	err := u.db.QueryRow(sqlStmt, id).Scan(&total)
+	if err != nil {
+		return total, err
+	}
+
+	return total, nil
+}
+
 func (u *UserRepo) DeleteUser(username string) error {
 	_, err := u.db.Exec("DELETE FROM user WHERE username = ?", username)
 	if err != nil {
@@ -194,141 +204,6 @@ func (u *UserRepo) DeleteUser(username string) error {
 	}
 
 	return nil
-}
-
-func (u *UserRepo) SortingAsc() ([]Task, error) {
-	sqlStmt := `
-	SELECT
-		g.Id AS id,
-		u.jenis AS jenis,
-		g.gambar AS gambar,
-		g.judul AS judul,
-		g.deskripsi AS deskripsi,
-		g.lokasi AS lokasi,
-		g.harga AS harga
-	FROM
-		products AS g
-	JOIN JenisProducts AS u ON (u.id = g.id_jenis)
-	ORDER BY g.harga ASC
-	`
-
-	rows, err := u.db.Query(sqlStmt)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	barang := []Task{}
-	for rows.Next() {
-		var barangs Task
-		err := rows.Scan(
-			&barangs.Id,
-			&barangs.Jenis,
-			&barangs.Gambar,
-			&barangs.Judul,
-			&barangs.Deskripsi,
-			&barangs.Lokasi,
-			&barangs.Harga,
-		)
-		if err != nil {
-			return nil, err
-		}
-		barang = append(barang, barangs)
-	}
-	return barang, nil
-}
-
-func (u *UserRepo) SortingDsc() ([]Task, error) {
-	sqlStmt := `
-	SELECT
-		g.Id AS id,
-		u.jenis AS jenis,
-		g.gambar AS gambar,
-		g.judul AS judul,
-		g.deskripsi AS deskripsi,
-		g.lokasi AS lokasi,
-		g.harga AS harga
-	FROM
-		products AS g
-	JOIN JenisProducts AS u ON (u.id = g.id_jenis)
-	ORDER BY g.harga DESC
-	`
-
-	rows, err := u.db.Query(sqlStmt)
-	if err != nil {
-		return nil, err
-	}
-	defer rows.Close()
-
-	barang := []Task{}
-	for rows.Next() {
-		var barangs Task
-		err := rows.Scan(
-			&barangs.Id,
-			&barangs.Jenis,
-			&barangs.Gambar,
-			&barangs.Judul,
-			&barangs.Deskripsi,
-			&barangs.Lokasi,
-			&barangs.Harga,
-		)
-		if err != nil {
-			return nil, err
-		}
-		barang = append(barang, barangs)
-	}
-	return barang, nil
-}
-
-func (u *UserRepo) CreateKomentar(Id ID, IdProduct ID, IdUser ID, Content string, Rating int) (int64, error) {
-	sqlStatement := `INSERT INTO komentar (id, id_product, id_user, content, like, dislike, rating, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?);`
-
-	stmt, err := u.db.Prepare(sqlStatement)
-	if err != nil {
-		panic(err)
-	}
-	defer stmt.Close()
-
-	result, err := stmt.Exec(Id, IdProduct, IdUser, Content, 0, 0, Rating, time.Now().UTC())
-	if err != nil {
-		panic(err)
-	}
-	fmt.Println(result)
-
-	return result.LastInsertId()
-
-}
-
-func (u *UserRepo) DeleteKomentar(id ID) error {
-	_, err := u.db.Exec("DELETE FROM komentar WHERE id = ?", id)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-func (u *UserRepo) CheckKomentar(id ID) (*Komentar, error) {
-	rows, err := u.db.Query("SELECT * FROM komentar WHERE id = ?", id)
-	if err != nil {
-		return nil, err
-	}
-	var komentar Komentar
-	for rows.Next() {
-		err := rows.Scan(
-			&komentar.Id,
-			&komentar.Id_product,
-			&komentar.Id_user,
-			&komentar.Content,
-			&komentar.Like,
-			&komentar.Dislike,
-			&komentar.Rating,
-			&komentar.CreatedAt,
-		)
-		if err != nil {
-			return nil, err
-		}
-	}
-	return &komentar, nil
 }
 
 func (u *UserRepo) GetProductByID(id ID) ([]Task, error) {
@@ -436,7 +311,7 @@ func (u *UserRepo) CheckWishlist(Id_user ID, Id_product ID) (*WishlistResponse, 
 	return &wish, nil
 }
 
-func (u *UserRepo) SearchTask(search string) ([]Task, error) {
+func (u *UserRepo) SearchTask(search string, limit int, offset int) ([]Task, error) {
 	sqlStatement := `SELECT 
 			t.id,
 			p.jenis,
@@ -448,10 +323,51 @@ func (u *UserRepo) SearchTask(search string) ([]Task, error) {
 			FROM products AS t 
 			INNER JOIN JenisProducts AS p 
 			ON t.id_jenis = p.id 
-			WHERE t.judul LIKE ?`
+			WHERE t.judul LIKE ? 
+	UNION
+		SELECT 
+			t.id,
+			p.jenis,
+			t.gambar,
+			t.judul,
+			t.deskripsi,
+			t.lokasi,
+			t.harga
+			FROM products AS t 
+			INNER JOIN JenisProducts AS p 
+			ON t.id_jenis = p.id 
+			WHERE t.deskripsi LIKE ? 
+	UNION
+		SELECT 
+			t.id,
+			p.jenis,
+			t.gambar,
+			t.judul,
+			t.deskripsi,
+			t.lokasi,
+			t.harga
+			FROM products AS t 
+			INNER JOIN JenisProducts AS p 
+			ON t.id_jenis = p.id 
+			WHERE t.lokasi LIKE ? 
+	UNION
+		SELECT 
+			t.id,
+			p.jenis,
+			t.gambar,
+			t.judul,
+			t.deskripsi,
+			t.lokasi,
+			t.harga
+			FROM products AS t 
+			INNER JOIN JenisProducts AS p 
+			ON t.id_jenis = p.id 
+			WHERE p.jenis LIKE ? 
+		LIMIT ?
+		OFFSET ?`
 
 	searchX := "%" + search + "%"
-	rows, err := u.db.Query(sqlStatement, searchX)
+	rows, err := u.db.Query(sqlStatement, searchX, searchX, searchX, searchX, limit, offset)
 	if rows == nil {
 		return nil, errors.New("Product not found")
 	}
@@ -476,11 +392,10 @@ func (u *UserRepo) SearchTask(search string) ([]Task, error) {
 	if len(tasks) == 0 {
 		return nil, errors.New("Product not found")
 	}
-	fmt.Println(tasks)
 	return tasks, nil
 }
 
-func (u *UserRepo) GetTask() ([]Task, error) {
+func (u *UserRepo) GetTask(limit int, offset int) ([]Task, error) {
 	rows, err := u.db.Query(`
 	SELECT
 		t.id,
@@ -494,7 +409,9 @@ func (u *UserRepo) GetTask() ([]Task, error) {
 		t.kapasitas
 	FROM products AS t 
 	INNER JOIN JenisProducts AS p
-	ON t.id_jenis = p.id`)
+	ON t.id_jenis = p.id
+	LIMIT ?
+	OFFSET ?`, limit, offset)
 	if err != nil {
 		return []Task{}, err
 	}
@@ -570,132 +487,6 @@ func (u *UserRepo) FilterByGame(id int) ([]Task, error) {
 		tasks = append(tasks, products)
 	}
 	return tasks, nil
-}
-
-func (u *UserRepo) UseCoupon(kupon UseCoupon) (*UseCoupon, error) {
-	sqlStatement := `INSERT INTO user_coupons (id, id_user, kode_coupon, status) VALUES (?, ?, ?, ?);`
-
-	rows, err := u.db.Query(sqlStatement, kupon.Id, kupon.IdUser, kupon.Kode, kupon.Status)
-	if err != nil {
-		return nil, err
-	}
-
-	var data UseCoupon
-	for rows.Next() {
-		err = rows.Scan(&data.Id, &data.IdUser, &data.Kode, &data.Status)
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	return &data, nil
-}
-
-func (u *UserRepo) ValidateCoupon(kupon UseCoupon) (*UseCoupon, error) {
-	sqlStatement := `SELECT * FROM user_coupons WHERE kode_coupon = ? AND id_user = ?`
-
-	rows, err := u.db.Query(sqlStatement, kupon.Kode, kupon.IdUser)
-	if err != nil {
-		return nil, err
-	}
-
-	var data UseCoupon
-	for rows.Next() {
-		err = rows.Scan(&data.Id, &data.IdUser, &data.Kode, &data.Status)
-		if err != nil {
-			return nil, err
-		}
-	}
-
-	return &data, nil
-}
-
-func (u *UserRepo) CheckCoupon(Kode string) (NambahCoupon, error) {
-	sqlStatement := `SELECT * FROM coupons WHERE kode = ?;`
-
-	rows, err := u.db.Query(sqlStatement, Kode)
-	if err != nil {
-		return NambahCoupon{}, err
-	}
-
-	var coupon NambahCoupon
-	for rows.Next() {
-		err = rows.Scan(&coupon.Kode, &coupon.Diskon, &coupon.Minimal)
-		if err != nil {
-			return coupon, err
-		}
-	}
-
-	return coupon, nil
-
-}
-
-func (u *UserRepo) GetNotification() ([]Notifikasi, error) {
-	sqlStatement := `SELECT * FROM notifications`
-
-	rows, err := u.db.Query(sqlStatement)
-	if err != nil {
-		return nil, err
-	}
-
-	notification := []Notifikasi{}
-	for rows.Next() {
-		var notifications Notifikasi
-		err := rows.Scan(
-			&notifications.Id,
-			&notifications.Pesan,
-		)
-		if err != nil {
-			return nil, err
-		}
-		notification = append(notification, notifications)
-	}
-	return notification, nil
-}
-
-func (u *UserRepo) AddBasket(id ID, Id_user ID, Id_product ID) (Basket, error) {
-	sqlStatement := `INSERT INTO Basket (id, id_user, id_product) VALUES (?, ?, ?);`
-
-	stmt, err := u.db.Prepare(sqlStatement)
-	if err != nil {
-		panic(err)
-	}
-
-	defer stmt.Close()
-
-	row, err := stmt.Query(id, Id_user, Id_product)
-	if err != nil {
-		panic(err)
-	}
-
-	var basket Basket
-
-	for row.Next() {
-		err = row.Scan(&basket.Id_user, &basket.Id_product)
-		if err != nil {
-			panic(err)
-		}
-	}
-
-	return basket, nil
-}
-
-func (u *UserRepo) CheckBasket(Id_user ID, Id_product ID) (BasketResponse, error) {
-	sqlStatement := `SELECT * FROM Basket WHERE id_user = ? AND id_product = ?`
-	rows, err := u.db.Query(sqlStatement, Id_user, Id_product)
-	if err != nil {
-		return BasketResponse{}, err
-	}
-
-	var basket BasketResponse
-	for rows.Next() {
-		err = rows.Scan(&basket.Id, &basket.Id_user, &basket.Id_product)
-		if err != nil {
-			return basket, err
-		}
-	}
-
-	return basket, nil
 }
 
 func (u *UserRepo) GetWishlist(id_user ID, Id_product ID) ([]Wishlist, error) {

@@ -5,8 +5,8 @@ export default function BannerSection() {
         <div className="jumbotron jumbotron-fluid my-5 py-5">
             <div className="container py-5 d-flex justify-content-center">
                 <div className="col-md-6 pd-5 m-3">
-                    <h3>BAGIKAN PASSION DAN SEMANGAT ANDA!!</h3>
-                    <p className="lead">DAFTAR MENJADI MITRA PENDIDIK untuk mengajar, membimbing, mengarahkan, melatih, menilai, dan mengevaluasi peserta didik.</p>
+                    <h3>Ayoo daftarkan diri kalian</h3>
+                    <p className="lead">Daftar untuk melihat seminar terbaru yang membuat diri kalian menjadi lebih baik lagi</p>
 
                 </div>
                 <div>

@@ -1,15 +1,12 @@
 module github.com/syaddadSmiley/SeminarPage
 
-// +heroku goVersion go1.17
 go 1.17
 
 require (
 	github.com/gin-contrib/cors v1.4.0
 	github.com/gin-gonic/gin v1.8.1
-	github.com/go-sql-driver/mysql v1.6.0
 	github.com/golang-jwt/jwt/v4 v4.4.2
 	github.com/google/uuid v1.3.0
-	github.com/lib/pq v1.10.6
 	github.com/mattn/go-sqlite3 v1.14.14
 	github.com/onsi/ginkgo/v2 v2.1.4
 	github.com/onsi/gomega v1.20.0

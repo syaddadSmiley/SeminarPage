@@ -51,17 +51,6 @@ type UpdateProductInput struct {
 	Kapasitas int      `json:"kapasitas"`
 }
 
-type KomentarInput struct {
-	Id         repoz.ID `json:"-"`
-	Id_product repoz.ID `db:"id_product"`
-	Id_user    repoz.ID `db:"-"`
-	Username   string   `db:"username"`
-	Content    string   `db:"content"`
-	Like       int      `db:"-"`
-	Dislike    int      `db:"-"`
-	Rating     int      `db:"rating"`
-}
-
 type NambahKategori struct {
 	Id    int    `json:"-"`
 	Jenis string `json:"jenis"`
@@ -80,13 +69,6 @@ type Result struct {
 	Pagination *Pagination `json:"pagination,omitempty"`
 }
 
-type Pagination struct {
-	Total     int `json:"total"`
-	Page      int `json:"page"`
-	PerPage   int `json:"per_page"`
-	TotalPage int `json:"total_page"`
-}
-
 type Wishlist struct {
 	Id_user    int `db:"id_user"`
 	Id_product int `db:"id_product"`
@@ -97,12 +79,9 @@ type GantiPassword struct {
 	Password string `json:"password"`
 }
 
-type Notification struct {
-	Id    int    `db:"id"`
-	Pesan string `json:"pesan"`
-}
-
-type basket struct {
-	Id_user    int `db:"id_user"`
-	Id_product int `db:"id_product"`
+type Pagination struct {
+	Total     int `json:"total"`
+	Page      int `json:"page"`
+	PerPage   int `json:"per_page"`
+	TotalPage int `json:"total_page"`
 }

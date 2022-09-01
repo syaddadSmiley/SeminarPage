@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"time"
-
 	"github.com/google/uuid"
 )
 
@@ -95,24 +93,6 @@ type DeleteUserReqByUsername struct {
 	Username string `json:"username"`
 }
 
-type Komentar struct {
-	Id         ID        `json:"id"`
-	Id_product ID        `db:"id_product"`
-	Id_user    ID        `db:"id_user"`
-	Username   string    `db:"username"`
-	Content    string    `db:"content"`
-	Like       int       `db:"like"`
-	Dislike    int       `db:"dislike"`
-	Rating     int       `db:"rating"`
-	CreatedAt  time.Time `db:"created_at"`
-}
-
-type KomentarRequest struct {
-	Id_product ID     `json:"id_product"`
-	Username   string `json:"username"`
-	Content    string `json:"content"`
-}
-
 type Wishlist struct {
 	Id         ID   `json:"id"`
 	Id_user    ID   `db:"id_user"`
@@ -129,35 +109,6 @@ type WishlistResponse struct {
 	Id       ID     `json:"id"`
 	Username string `json:"username"`
 	Product  string `json:"product"`
-}
-
-type NambahCoupon struct {
-	Kode    string `json:"kode"`
-	Diskon  int    `json:"diskon"`
-	Minimal int    `json:"minimal"`
-}
-
-type UseCoupon struct {
-	Id     ID     `json:"-"`
-	IdUser ID     `json:"-"`
-	Kode   string `json:"kode"`
-	Status string `json:"status"`
-}
-
-type Notifikasi struct {
-	Id    ID     `json:"id"`
-	Pesan string `json:"pesan"`
-}
-
-type Basket struct {
-	Id_user    ID `json:"id_user"`
-	Id_product ID `json:"id_product"`
-}
-
-type BasketResponse struct {
-	Id         ID `json:"id"`
-	Id_user    ID `json:"username"`
-	Id_product ID `json:"product"`
 }
 
 type CreateProductResponse struct {
