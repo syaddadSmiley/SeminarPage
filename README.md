@@ -6,3 +6,4 @@
 - [x] **go-sqlite3**: SQLite3 driver for Go using database/sql.
 - [x] **JWT**: JSON Web Tokens (JWT) to secure the API and Middleware.
 - [x] **encoding/base64**: Package base64 implements base64 encoding for Converting Image to Base64.
+- [x] **React Bootstrap**: A Javascript library for better and responsive UI.
